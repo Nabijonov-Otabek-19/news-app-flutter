@@ -16,11 +16,18 @@ class _HomeScreenState extends State<HomeScreen> {
   List<TopArticle> items = [];
 
   final _api = Api(BaseApi().dio);
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     loadData();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void loadData() async {
@@ -40,61 +47,68 @@ class _HomeScreenState extends State<HomeScreen> {
             if (items.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
-            return ListView.builder(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(8),
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return Card(
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: CachedNetworkImage(
-                              errorWidget: (context, url, error) => Image.asset(
-                                  fit: BoxFit.cover,
-                                  "assets/images/img_placeholder.jpg"),
-                              placeholder: (context, url) => Image.asset(
-                                  fit: BoxFit.cover,
-                                  "assets/images/img_placeholder.jpg"),
-                              fit: BoxFit.cover,
-                              imageUrl: item.urlToImage!)),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(item.title,
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2),
-                            const SizedBox(height: 8.0),
-                            Text(
-                              item.author,
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ],
+            return Scrollbar(
+              scrollbarOrientation: ScrollbarOrientation.right,
+              controller: _scrollController,
+              child: ListView.builder(
+                controller: _scrollController,
+                scrollDirection: Axis.vertical,
+                padding: const EdgeInsets.all(8),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  return Card(
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
+                                        fit: BoxFit.cover,
+                                        "assets/images/img_placeholder.jpg"),
+                                placeholder: (context, url) => Image.asset(
+                                    fit: BoxFit.cover,
+                                    "assets/images/img_placeholder.jpg"),
+                                fit: BoxFit.cover,
+                                imageUrl: item.urlToImage!)),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(item.title,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2),
+                              const SizedBox(height: 8.0),
+                              Text(
+                                item.author,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                                "${item.publishedAt.day}/${item.publishedAt.month}/${item.publishedAt.year}",
-                                style: const TextStyle(fontSize: 12)),
-                            Text(item.source.name,
-                                style: const TextStyle(fontSize: 12)),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  "${item.publishedAt.day}/${item.publishedAt.month}/${item.publishedAt.year}",
+                                  style: const TextStyle(fontSize: 12)),
+                              Text(item.source.name,
+                                  style: const TextStyle(fontSize: 12)),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
             );
           },
         ),
