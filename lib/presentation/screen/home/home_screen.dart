@@ -1,8 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_bloc/domain/repository.dart';
+import 'package:news_app_bloc/presentation/screen/read/read_screen.dart';
+import 'package:news_app_bloc/presentation/widgets/widget_category_item.dart';
+import 'package:news_app_bloc/presentation/widgets/widget_news_item.dart';
+import 'package:news_app_bloc/utils/constants.dart';
 
-import '../../../data/model/top/top_model.dart';
+import '../../../data/model/top_model.dart';
 import '../../../data/source/remote/base_api.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,22 +19,23 @@ class _HomeScreenState extends State<HomeScreen> {
   List<TopArticle> items = [];
 
   final _api = Api(BaseApi().dio);
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollControllNews = ScrollController();
 
   @override
   void initState() {
-    loadData();
+    loadData('general');
     super.initState();
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _scrollControllNews.dispose();
     super.dispose();
   }
 
-  void loadData() async {
-    items.addAll(await _api.topHeadlines('us'));
+  void loadData(String category) async {
+    items = [];
+    items.addAll(await _api.topHeadlines('us', category));
     setState(() {});
   }
 
@@ -47,68 +51,47 @@ class _HomeScreenState extends State<HomeScreen> {
             if (items.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
-            return Scrollbar(
-              scrollbarOrientation: ScrollbarOrientation.right,
-              controller: _scrollController,
-              child: ListView.builder(
-                controller: _scrollController,
-                scrollDirection: Axis.vertical,
-                padding: const EdgeInsets.all(8),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  return Card(
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: CachedNetworkImage(
-                                errorWidget: (context, url, error) =>
-                                    Image.asset(
-                                        fit: BoxFit.cover,
-                                        "assets/images/img_placeholder.jpg"),
-                                placeholder: (context, url) => Image.asset(
-                                    fit: BoxFit.cover,
-                                    "assets/images/img_placeholder.jpg"),
-                                fit: BoxFit.cover,
-                                imageUrl: item.urlToImage!)),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(item.title,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2),
-                              const SizedBox(height: 8.0),
-                              Text(
-                                item.author,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  "${item.publishedAt.day}/${item.publishedAt.month}/${item.publishedAt.year}",
-                                  style: const TextStyle(fontSize: 12)),
-                              Text(item.source.name,
-                                  style: const TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
+            return Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.all(8),
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      return WidgetCategoryItem(
+                        model: categories[index],
+                        onTap: () {
+                          loadData(categories[index].title);
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    padding: const EdgeInsets.all(8),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      return WidgetNewsItem(
+                        item: item,
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ReadScreen(item: item)));
+                          // Navigate to ReadScreen
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
           },
         ),

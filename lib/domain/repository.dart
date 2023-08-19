@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:news_app_bloc/utils/constants.dart';
-import '../data/model/search/search_model.dart';
-import '../data/model/top/top_model.dart';
+import '../data/model/search_model.dart';
+import '../data/model/top_model.dart';
 
 // q=bitcoin&apiKey=8ce8a65495544de6976cc5de23fe3fca
 // country=us&apiKey=8ce8a65495544de6976cc5de23fe3fca
@@ -37,8 +37,7 @@ class Api {
     return (model).map((e) => SearchArticle.fromJson(e)).toList();
   }
 
-  Future<List<TopArticle>> topHeadlines(String country,
-      {String category = "general"}) async {
+  Future<List<TopArticle>> topHeadlines(String country, String category) async {
     List<dynamic> model = [];
 
     try {
