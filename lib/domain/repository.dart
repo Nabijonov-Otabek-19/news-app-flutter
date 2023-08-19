@@ -8,10 +8,10 @@ import '../data/model/top_model.dart';
 // q=bitcoin&apiKey=8ce8a65495544de6976cc5de23fe3fca
 // country=us&apiKey=8ce8a65495544de6976cc5de23fe3fca
 
-class Api {
+class Repository {
   final Dio dio;
 
-  Api(this.dio);
+  Repository(this.dio);
 
   Future<List<SearchArticle>> search(String content) async {
     List<dynamic> model = [];

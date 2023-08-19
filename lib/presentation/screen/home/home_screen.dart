@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<TopArticle> items = [];
 
-  final _api = Api(BaseApi().dio);
+  final _api = Repository(BaseApi().dio);
   final ScrollController _scrollControllNews = ScrollController();
 
   @override
