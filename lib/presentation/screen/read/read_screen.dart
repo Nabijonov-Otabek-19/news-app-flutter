@@ -20,6 +20,19 @@ class _ReadScreenState extends State<ReadScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("About News"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Save to Hive
+              print("News Item SAVED");
+            },
+            icon: const Icon(
+              Icons.favorite_border_outlined,
+              color: Colors.white,
+              size: 30,
+            ),
+          )
+        ],
       ),
       body: Scrollable(
         controller: _scrollController,

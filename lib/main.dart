@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         ),
         appBarTheme: const AppBarTheme(
             color: Color(0xff72afff),
+            centerTitle: true,
             titleTextStyle: TextStyle(color: Colors.white, fontSize: 22)),
         useMaterial3: true,
       ),
@@ -75,17 +76,23 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 0,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Theme
+                  .of(context)
+                  .primaryColor,
               activeIcon: const Icon(Icons.home),
               icon: const Icon(Icons.home_outlined),
               label: "Home"),
           BottomNavigationBarItem(
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Theme
+                  .of(context)
+                  .primaryColor,
               activeIcon: const Icon(Icons.favorite),
               icon: const Icon(Icons.favorite_border_outlined),
               label: "Favourite"),
           BottomNavigationBarItem(
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Theme
+                  .of(context)
+                  .primaryColor,
               activeIcon: const Icon(Icons.saved_search),
               icon: const Icon(Icons.search),
               label: "Search")

@@ -1,11 +1,23 @@
-import 'package:news_app_bloc/data/model/top_model.dart';
+part of 'home_bloc.dart';
 
-class HomeState {
+@immutable
+abstract class HomeState {}
+
+class InitState extends HomeState {}
+
+class LoadState extends HomeState {
   final List<TopArticle> items;
 
-  const HomeState({this.items = const []});
+  LoadState({this.items = const []});
 
-  HomeState copyWith({List<TopArticle>? items}) {
-    return HomeState(items: items ?? this.items);
+  LoadState copyWith({List<TopArticle>? items}) {
+    return LoadState(items: items ?? this.items);
   }
 }
+
+class ErrorState extends HomeState {
+  final String message;
+
+  ErrorState({this.message = ""});
+}
+
