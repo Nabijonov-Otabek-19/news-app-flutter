@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_bloc/presentation/screen/favourite/favourite_screen.dart';
 import 'package:news_app_bloc/presentation/screen/home/home_screen.dart';
-import 'package:news_app_bloc/presentation/screen/search/search_screen.dart';
 import 'package:news_app_bloc/theme/colors.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
@@ -54,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final pages = [
     const HomeScreen(),
     const FavouriteScreen(),
-    const SearchScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -76,26 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 0,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              backgroundColor: Theme
-                  .of(context)
-                  .primaryColor,
+              backgroundColor: Theme.of(context).primaryColor,
               activeIcon: const Icon(Icons.home),
               icon: const Icon(Icons.home_outlined),
               label: "Home"),
           BottomNavigationBarItem(
-              backgroundColor: Theme
-                  .of(context)
-                  .primaryColor,
+              backgroundColor: Theme.of(context).primaryColor,
               activeIcon: const Icon(Icons.favorite),
               icon: const Icon(Icons.favorite_border_outlined),
               label: "Favourite"),
-          BottomNavigationBarItem(
-              backgroundColor: Theme
-                  .of(context)
-                  .primaryColor,
-              activeIcon: const Icon(Icons.saved_search),
-              icon: const Icon(Icons.search),
-              label: "Search")
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped);
